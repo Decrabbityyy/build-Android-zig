@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  TARGET: aarch64-linux-android30
+  TARGET: aarch64-linux-android
   MCPU: baseline
   BUILD_SCRIPT: ./zig-bootstrap/build
 
@@ -27,10 +27,12 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y cmake
       
       - name: Run the build script
+        env:
+          CMAKE_GENERATOR: Ninja
         run: |
           echo "Starting build for target: ${{ env.TARGET }} with MCPU: ${{ env.MCPU }}"
           cd zig-bootstrap
-          time ./build ${{ env.TARGET }} ${{ env.MCPU }}
+          ./build ${{ env.TARGET }} ${{ env.MCPU }}
 
       - name: Package the artifact
         run: |
