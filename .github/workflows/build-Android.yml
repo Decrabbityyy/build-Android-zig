@@ -6,7 +6,7 @@ on:
 env:
   TARGET: aarch64-linux-android30
   MCPU: baseline
-  BUILD_SCRIPT: ./zig-bootstrap/build.sh
+  BUILD_SCRIPT: ./zig-bootstrap/build
 
 jobs:
   build:
@@ -19,9 +19,6 @@ jobs:
           repository: 'ziglang/zig-bootstrap'
           path: 'zig-bootstrap'
           submodules: 'recursive'
-
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y cmake
 
       - name: Make build script executable
         run: chmod +x ${{ env.BUILD_SCRIPT }}
