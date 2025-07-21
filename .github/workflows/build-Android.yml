@@ -1,0 +1,47 @@
+name: Build Zig for Android (aarch64) from official repo
+
+on:
+  workflow_dispatch:
+
+env:
+  TARGET: aarch64-linux-android30
+  MCPU: baseline
+  BUILD_SCRIPT: ./zig-bootstrap/build.sh
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout zig-bootstrap repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'ziglang/zig-bootstrap'
+          path: 'zig-bootstrap'
+          submodules: 'recursive'
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake
+
+      - name: Make build script executable
+        run: chmod +x ${{ env.BUILD_SCRIPT }}
+
+      - name: Run the build script
+        run: |
+          echo "Starting build for target: ${{ env.TARGET }} with MCPU: ${{ env.MCPU }}"
+          cd zig-bootstrap
+          time ./build.sh ${{ env.TARGET }} ${{ env.MCPU }}
+
+      - name: Package the artifact
+        run: |
+          ARTIFACT_DIR="zig-bootstrap/out/zig-${{ env.TARGET }}-${{ env.MCPU }}"
+          ARTIFACT_NAME="zig-${{ env.TARGET }}-${{ env.MCPU }}.tar.gz"
+          echo "Packaging directory: ${ARTIFACT_DIR}"
+          tar -czvf ${ARTIFACT_NAME} ${ARTIFACT_DIR}
+          echo "ARTIFACT_PATH=${ARTIFACT_NAME}" >> $GITHUB_ENV
+
+      - name: Upload Zig compiler artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zig-compiler-${{ env.TARGET }}
+          path: ${{ env.ARTIFACT_PATH }}
