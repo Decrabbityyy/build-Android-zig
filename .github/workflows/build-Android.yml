@@ -1,4 +1,4 @@
-name: Build Zig for Android (aarch64) from official repo
+name: Build Zig for Android (aarch64)
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "Starting build for target: ${{ env.TARGET }} with MCPU: ${{ env.MCPU }}"
           cd zig-bootstrap
-          time ./build.sh ${{ env.TARGET }} ${{ env.MCPU }}
+          time ./build ${{ env.TARGET }} ${{ env.MCPU }}
 
       - name: Package the artifact
         run: |
