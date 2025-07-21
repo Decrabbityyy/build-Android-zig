@@ -22,7 +22,10 @@ jobs:
 
       - name: Make build script executable
         run: chmod +x ${{ env.BUILD_SCRIPT }}
-
+        
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake
+      
       - name: Run the build script
         run: |
           echo "Starting build for target: ${{ env.TARGET }} with MCPU: ${{ env.MCPU }}"
