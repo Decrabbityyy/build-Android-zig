@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  TARGET: aarch64-linux-android
+  TARGET: aarch64-linux-android.29
   MCPU: baseline
   BUILD_SCRIPT: ./zig-bootstrap/build
 
